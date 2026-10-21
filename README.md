@@ -1,3 +1,19 @@
+> [!IMPORTANT]
+> **Project Barry's additions to this fork were built with a coding agent:
+> [Claude Code](https://www.anthropic.com/claude-code), running Anthropic's
+> Claude Opus 5.5 (`claude-opus-5-5`).** This applies only to what Project
+> Barry added (the v1.2 boot hang fix in `Abl/openabl.patch`): Claude wrote that code, its commit message and this
+> note. Everything else is upstream [OpenABL](https://github.com/OpenHandheldCollective/OpenABL)'s work, by its own authors. People set
+> the goals, made the decisions and did the hands-on testing. Review the code
+> before you rely on it. See [a note from lavachemist](https://github.com/project-barry), a human, on Project Barry and generative AI.
+
+> **Project Barry fork (v1.2).** Upstream OpenABL v1.1 plus one fix: it no
+> longer sometimes hangs on the vendor logo after "Start EBS". Before the jump
+> to the kernel, with the MMU and caches off, it cleans the stack and the
+> stack canary from the cache by address, and it no longer calls a UEFI
+> runtime service for boot statistics. Images are provided for SM8550 and
+> SM8650 only; tested on the Retroid Pocket Nova (SM8550).
+
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="Docs/logo-dark.png">
   <img alt="OpenABL" src="Docs/logo-light.png" width="320">

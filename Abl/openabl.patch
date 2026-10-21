@@ -665,6 +665,34 @@ index ea7930e..e991c51 100644
  /**
    Check image header
    @param[in]  ImageHdrBuffer  Supplies the address where a pointer to the image
+diff --git a/QcomModulePkg/Library/BootLib/BootStats.c b/QcomModulePkg/Library/BootLib/BootStats.c
+index 8705927..822dff1 100644
+--- a/QcomModulePkg/Library/BootLib/BootStats.c
++++ b/QcomModulePkg/Library/BootLib/BootStats.c
+@@ -93,6 +93,23 @@ BootStatsSetInitTimeStamp ()
+   }
+     BsImemAddress = SharedImemAddress + BS_INFO_OFFSET;
+     memset ((UINT64 *)BsImemAddress, 0, sizeof (UINT32) * BS_MAX);
++
++  /*
++   * Look up the MPM sleep counter now too. Otherwise the first
++   * BootStatsSetTimeStamp () on a path that never loaded an image through
++   * LoadImage () is BS_BL_END, which then calls the GetVariable () runtime
++   * service after ExitBootServices with the MMU and caches off: it can hang.
++   */
++  DataSize = sizeof (MpmTimerBase);
++  if (!MpmTimerBase) {
++    Status =
++        gRT->GetVariable ((CHAR16 *)L"MPM2_SLP_CNTR_ADDR", &gQcomTokenSpaceGuid,
++                          NULL, &DataSize, &MpmTimerBase);
++    if (Status != EFI_SUCCESS) {
++      DEBUG (
++          (EFI_D_ERROR, "Failed to get MPM Sleep counter base, %r\n", Status));
++    }
++  }
+ }
+ 
+ VOID
 diff --git a/QcomModulePkg/Library/BootLib/DeviceInfo.c b/QcomModulePkg/Library/BootLib/DeviceInfo.c
 index 2e29bce..c76cc6a 100644
 --- a/QcomModulePkg/Library/BootLib/DeviceInfo.c
@@ -745,7 +773,7 @@ index 4684c88..73ac1e5 100644
  }
  
 diff --git a/QcomModulePkg/Library/BootLib/ShutdownServices.c b/QcomModulePkg/Library/BootLib/ShutdownServices.c
-index 4064b49..9c877d9 100644
+index 4064b49..b7f034d 100644
 --- a/QcomModulePkg/Library/BootLib/ShutdownServices.c
 +++ b/QcomModulePkg/Library/BootLib/ShutdownServices.c
 @@ -57,6 +57,7 @@
@@ -756,10 +784,12 @@ index 4064b49..9c877d9 100644
  #include <Library/DxeServicesTableLib.h>
  #include <Library/HobLib.h>
  #include <Library/LinuxLoaderLib.h>
-@@ -134,6 +135,15 @@ EFI_STATUS PreparePlatformHardware (VOID)
+@@ -134,6 +135,17 @@ EFI_STATUS PreparePlatformHardware (VOID)
    return EFI_SUCCESS;
  }
  #else
++extern UINTN __stack_chk_guard;
++
 +/* OpenABL: free the UART from hypervisor logging; older firmware needs it. */
 +STATIC VOID DisableHypUartLogging (VOID)
 +{
@@ -772,7 +802,7 @@ index 4064b49..9c877d9 100644
  EFI_STATUS PreparePlatformHardware (EFI_KERNEL_PROTOCOL *KernIntf,
      VOID *KernelLoadAddr, UINTN KernelSizeActual, VOID *RamdiskLoadAddr,
      UINTN RamdiskSizeActual, VOID *DeviceTreeLoadAddr,
-@@ -149,6 +159,7 @@ EFI_STATUS PreparePlatformHardware (EFI_KERNEL_PROTOCOL *KernIntf,
+@@ -149,6 +161,7 @@ EFI_STATUS PreparePlatformHardware (EFI_KERNEL_PROTOCOL *KernIntf,
      StackBase = KernIntf->Thread->ThreadGetUnsafeSPBase (ThreadNum);
    }
  
@@ -780,6 +810,28 @@ index 4064b49..9c877d9 100644
    ArmDisableBranchPrediction ();
  
    /* ArmDisableAllExceptions */
+@@ -167,6 +180,21 @@ EFI_STATUS PreparePlatformHardware (EFI_KERNEL_PROTOCOL *KernIntf,
+   }
+ 
+   ArmCleanDataCache ();
++  /*
++   * Also clean by address what is read after the MMU and caches are off:
++   * this thread's stack (this frame's saved registers and canary, the
++   * callers' frames) and the stack canary itself, which StackGuardChkSetup ()
++   * set at startup. Under the hypervisor the set/way clean above may not
++   * reach every dirty line; a stale canary in memory fails the check in this
++   * function's epilogue and __stack_chk_fail () spins forever.
++   */
++  {
++    UINTN Frame = (UINTN)__builtin_frame_address (0) & ~(UINTN)(EFI_PAGE_SIZE - 1);
++    WriteBackInvalidateDataCacheRange ((VOID *)(Frame - SIZE_16KB),
++                                       SIZE_16KB + SIZE_256KB);
++    WriteBackInvalidateDataCacheRange ((VOID *)&__stack_chk_guard,
++                                       sizeof (__stack_chk_guard));
++  }
+   ArmInvalidateInstructionCache ();
+ 
+   ArmDisableDataCache ();
 diff --git a/QcomModulePkg/Library/BootLib/UpdateCmdLine.c b/QcomModulePkg/Library/BootLib/UpdateCmdLine.c
 index 88e0117..b3c8b82 100644
 --- a/QcomModulePkg/Library/BootLib/UpdateCmdLine.c
