@@ -810,7 +810,7 @@ index 4064b49..00119ab 100644
    ArmDisableBranchPrediction ();
  
    /* ArmDisableAllExceptions */
-@@ -166,6 +181,9 @@ EFI_STATUS PreparePlatformHardware (EFI_KERNEL_PROTOCOL *KernIntf,
+@@ -166,6 +181,20 @@ EFI_STATUS PreparePlatformHardware (EFI_KERNEL_PROTOCOL *KernIntf,
                    CallerStackBase - (UINTN)CallerStackCurrent);
    }
  
@@ -818,6 +818,17 @@ index 4064b49..00119ab 100644
 +  WriteBackInvalidateDataCacheRange ((VOID *)&__stack_chk_guard,
 +                                     sizeof (__stack_chk_guard));
    ArmCleanDataCache ();
++  /*
++   * OpenABL-PB: also clean this thread's stack by address (this frame's saved
++   * registers and canary, the callers' frames). Under the hypervisor the
++   * set/way clean above may not reach every dirty line; a stale copy fails
++   * the check in this function's epilogue and __stack_chk_fail () spins.
++   */
++  {
++    UINTN Frame = (UINTN)__builtin_frame_address (0) & ~(UINTN)(EFI_PAGE_SIZE - 1);
++    WriteBackInvalidateDataCacheRange ((VOID *)(Frame - SIZE_16KB),
++                                       SIZE_16KB + SIZE_256KB);
++  }
    ArmInvalidateInstructionCache ();
  
 diff --git a/QcomModulePkg/Library/BootLib/UpdateCmdLine.c b/QcomModulePkg/Library/BootLib/UpdateCmdLine.c
