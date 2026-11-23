@@ -18,6 +18,11 @@ The main menu and the boot entries, rendered by the simulator (`make sim`).
 Supported chipsets: SDM845, SM4450, SM6115, SM6450, SM7675, SM7750, SM8250,
 SM8550, SM8650 and SM8750.
 
+**OpenABL-PB** is PB-OS's build of OpenABL: the same version number as the
+OpenABL release it is based on (1.2), changed to support SM7750 (Retroid Pocket
+Duo) and to show its own name. It isn't an upstream release, so report problems
+with it to PB-OS, not to OpenABL.
+
 ## Using it
 
 Flash the image for your chipset to the ABL partition (both slots on A/B

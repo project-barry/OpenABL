@@ -840,7 +840,7 @@ Check (
     {"DSI", "qcom,mdss_dsi_visionox_1080p_cmd"},
     {"Android", "14 (UKQ1.230804.001)"},
     {"Model", "Retroid Pocket 5"},
-    {"Bootloader", "OpenABL " MENU_VERSION},
+    {"Bootloader", "OpenABL-PB " MENU_VERSION},
     {"UEFI firmware", "Qualcomm 4.0"},
     {"PMIC", "0x0 1.0, 0x1 2.0, 0x2 1.1"},
     {"Storage chip", "UFS \xc2\xb7 SAMSUNG KLUDG4UHGC-B0E1"},

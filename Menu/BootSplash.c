@@ -456,11 +456,11 @@ MenuBootSplash (
       CapH = 24.0f;
     }
     Em = CapH / FontCapHeight (1.0f);
-    W  = TextAdvance (Em, FONT_WEIGHT_MEDIUM, "OpenABL");
+    W  = TextAdvance (Em, FONT_WEIGHT_MEDIUM, "OpenABL-PB");
     if (W > (float)LogicalW * 0.6f) {
       Em *= (float)LogicalW * 0.6f / W;
       CapH = FontCapHeight (Em);
-      W    = TextAdvance (Em, FONT_WEIGHT_MEDIUM, "OpenABL");
+      W    = TextAdvance (Em, FONT_WEIGHT_MEDIUM, "OpenABL-PB");
     }
     OpenW = TextAdvance (Em, FONT_WEIGHT_MEDIUM, "Open");
     X     = ((float)LogicalW - W) / 2.0f;
@@ -470,12 +470,12 @@ MenuBootSplash (
     );
     DrawText (
       &Splash.Canvas, X + OpenW, ((float)LogicalH + CapH) / 2.0f, Em,
-      FONT_WEIGHT_MEDIUM, "ABL", 0xFF5555
+      FONT_WEIGHT_MEDIUM, "ABL-PB", 0xFF5555
     );
   }
   ShowFrame (&Splash);
   MenuLog (
-    "splash: the OpenABL wordmark drawn over the firmware's on the panel (%s)",
+    "splash: the OpenABL-PB wordmark drawn over the firmware's on the panel (%s)",
     Size
   );
   SplashFree (&Splash);
