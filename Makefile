@@ -19,7 +19,7 @@
 #   loader-quirks     XBL workarounds needed by OS loaders (SDM845, SM6115)
 #   park-display      set the display on before the boot, and off at
 #                     ExitBootServices when no devicetree was seen, as
-#                     LinuxLoader did on these chips (SM8650, SM8750)
+#                     LinuxLoader did on these chips (SM7750, SM8650, SM8750)
 #   debug             Debug section in the menu (adds sd-diagnostics and
 #                     display-quiesce)
 #

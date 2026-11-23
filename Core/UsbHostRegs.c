@@ -19,8 +19,8 @@ UsbHostBoardOf (
   OUT USB_HOST_BOARD *Out
 )
 {
-  STATIC CONST CHAR8 *CONST Glink[] = {"SM4450", "SM6450", "SM8550", "SM8650",
-                                       "SM8750"};
+  STATIC CONST CHAR8 *CONST Glink[] = {"SM4450", "SM6450", "SM7750", "CQ7790",
+                                       "SM8550", "SM8650", "SM8750"};
   OABL_TEXT                 Trimmed;
 
   switch (ChipId) {
@@ -34,7 +34,9 @@ UsbHostBoardOf (
     return TRUE;
   // G1 Gen 2 (SM4450), G2 Gen 1 (SM6450), G2 Gen 2 (Cliffs XBL, with
   // PmicGlinkDxe and the ADSP, DWC3 at 0xa600000), QCS8550 and G3x Gen 2,
-  // G3 Gen 3 (SM8650), 8 Elite and Q8750.
+  // G3 Gen 3 (SM8650), 8 Elite and Q8750, and SM7750 (Kera: SM7750, SM7750P,
+  // CQ7790M, CQ7790S; XBL has PmicGlinkDxe and XhciDxe, DWC3 at 0xa600000 on
+  // the Retroid Pocket Duo).
   case 654:
   case 634:
   case 700:
@@ -43,6 +45,10 @@ UsbHostBoardOf (
   case 682:
   case 639:
   case 706:
+  case 659:
+  case 686:
+  case 731:
+  case 732:
     *Out = USB_HOST_BOARD_GLINK;
     return TRUE;
   }
