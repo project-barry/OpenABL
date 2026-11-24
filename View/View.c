@@ -763,16 +763,16 @@ RowItem (
 
 // Header and footer
 
-// Returns the width of the "OpenABL" wordmark at Size.
+// Returns the width of the "OpenABL-PB" wordmark at Size.
 STATIC float
 WordmarkWidth (IN float Size)
 {
   return Measure ("Open", Size, FONT_WEIGHT_MEDIUM) +
-         Measure ("ABL", Size, FONT_WEIGHT_MEDIUM);
+         Measure ("ABL-PB", Size, FONT_WEIGHT_MEDIUM);
 }
 
-// Draws the "OpenABL" wordmark from X, its capitals centred on Cy: "Open"
-// in the text colour, "ABL" in the brand colour.
+// Draws the "OpenABL-PB" wordmark from X, its capitals centred on Cy: "Open"
+// in the text colour, "ABL-PB" in the brand colour.
 STATIC VOID
 Wordmark (
   IN float X,
@@ -781,7 +781,7 @@ Wordmark (
 )
 {
   float OpenW = Measure ("Open", Size, FONT_WEIGHT_MEDIUM);
-  float AblW  = Measure ("ABL", Size, FONT_WEIGHT_MEDIUM);
+  float AblW  = Measure ("ABL-PB", Size, FONT_WEIGHT_MEDIUM);
   float H     = ToPx (Size) * 2;
 
   TextIn (
@@ -789,7 +789,7 @@ Wordmark (
     FONT_WEIGHT_MEDIUM, THEME_TEXT, ALIGN_LEFT
   );
   TextIn (
-    Rectf (X + OpenW, Cy - H / 2, AblW + ToPx (2), H), "ABL", Size,
+    Rectf (X + OpenW, Cy - H / 2, AblW + ToPx (2), H), "ABL-PB", Size,
     FONT_WEIGHT_MEDIUM, THEME_BRAND, ALIGN_LEFT
   );
 }

@@ -212,6 +212,49 @@ STATIC CONST CARVEOUTS_REGION mSm8750[] = {
   {0xff800000, 0x00800000}, // llcc-lpi@ff800000
 };
 
+STATIC CONST CARVEOUTS_REGION mSm7750[] = {
+  {0x80000000, 0x00e00000}, // gunyah-hyp@80000000
+  {0x80e00000, 0x00400000}, // cpusys-vm-mem@80e00000
+  {0x81200000, 0x00100000}, // cpucp@81200000
+  {0x81a00000, 0x00040000}, // xbl-dtlog@81a00000
+  {0x81c00000, 0x00060000}, // aop-image@81c00000
+  {0x81c60000, 0x00020000}, // aop-cmd-db@81c60000
+  {0x81c80000, 0x00074000}, // aop-tme-uefi-merged@81c80000
+  {0x81cf4000, 0x00001000}, // chipinfo@81cf4000
+  {0x81d00000, 0x00200000}, // smem@81d00000
+  {0x82200000, 0x00180000}, // cpucp-scandump@82200000
+  {0x82380000, 0x00020000}, // adsp-mhi@82380000
+  {0x823a0000, 0x00040000}, // soccp-sdi@823a0000
+  {0x823e0000, 0x00080000}, // pmic-minii-dump@823e0000
+  {0x824a0000, 0x00100000}, // pvmfw@824a0000
+  {0x825a0000, 0x00060000}, // hyp-db@825a0000
+  {0x82600000, 0x00100000}, // global-sync@82600000
+  {0x82700000, 0x00100000}, // tz-stat@82700000
+  {0x82800000, 0x02000000}, // qdss@82800000
+  {0x84a00000, 0x03700000}, // dsm-partition-1@84a00000
+  {0x88100000, 0x0cd00000}, // mpss@88100000
+  {0x94e00000, 0x00080000}, // q6-mpss-dtb@94e00000
+  {0x94e80000, 0x00010000}, // ipa-fw@94e80000
+  {0x94e90000, 0x0000a000}, // ipa-gsi@94e90000
+  {0x94e9a000, 0x00002000}, // gpu-micro-code@94e9a000
+  {0x94f00000, 0x00800000}, // camera@94f00000
+  {0x95700000, 0x00800000}, // camera-2@95700000
+  {0x95f00000, 0x00800000}, // video@95f00000
+  {0x96700000, 0x00180000}, // soccp@96700000
+  {0x97000000, 0x01900000}, // wpss@97000000
+  {0x98900000, 0x01400000}, // cdsp@98900000
+  {0x99d00000, 0x00080000}, // q6-cdsp-dtb@99d00000
+  {0x99d80000, 0x00080000}, // q6-adsp-dtb@99d80000
+  {0x99e00000, 0x02a00000}, // adspslpi@99e00000
+  {0xa6400000, 0x00c00000}, // wlan-msa@a6400000
+  {0xb8000000, 0x001c0000}, // xbl-ramdump@b8000000
+  {0xd8000000, 0x00600000}, // tz-merged@d8000000
+  {0xf3800000, 0x04400000}, // trust-ui-vm@f3800000
+  {0xf7c00000, 0x04c00000}, // oem-vm@f7c00000
+  // splash_region@fc800000 (XBL Display Reserved) excluded
+  {0xff800000, 0x00180000}, // llcc-lpi@ff800000
+};
+
 STATIC CONST CARVEOUTS_REGION mSm6115[] = {
   {0x45700000, 0x00600000}, // memory@45700000
   {0x45e00000, 0x00140000}, // memory@45e00000
@@ -263,6 +306,7 @@ CONST CARVEOUTS_TABLE gCarveoutsSm8250 = TABLE (mSm8250);
 CONST CARVEOUTS_TABLE gCarveoutsSm8550 = TABLE (mSm8550);
 CONST CARVEOUTS_TABLE gCarveoutsSm8650 = TABLE (mSm8650);
 CONST CARVEOUTS_TABLE gCarveoutsSm8750 = TABLE (mSm8750);
+CONST CARVEOUTS_TABLE gCarveoutsSm7750 = TABLE (mSm7750);
 CONST CARVEOUTS_TABLE gCarveoutsSm6115 = TABLE (mSm6115);
 CONST CARVEOUTS_TABLE gCarveoutsSdm845 = TABLE (mSdm845);
 
@@ -279,6 +323,7 @@ CarveoutsForChip (
     {"SM4450", &gCarveoutsSm4450}, {"SM6450", &gCarveoutsSm6450},
     {"SM8250", &gCarveoutsSm8250}, {"SM8550", &gCarveoutsSm8550},
     {"SM8650", &gCarveoutsSm8650}, {"SM8750", &gCarveoutsSm8750},
+    {"SM7750", &gCarveoutsSm7750}, {"CQ7790", &gCarveoutsSm7750},
     {"SM6115", &gCarveoutsSm6115}, {"SDM845", &gCarveoutsSdm845},
     {"SDA845", &gCarveoutsSdm845},
   };
@@ -299,6 +344,13 @@ CarveoutsForChip (
   case 639:
   case 706:
     return &gCarveoutsSm8750;
+  // Kera (SM7750), KeraP (SM7750P), Kera IoT (CQ7790M) and KeraP IoT
+  // (CQ7790S, the Retroid Pocket Duo's), as XBL's ChipInfo names them.
+  case 659:
+  case 686:
+  case 731:
+  case 732:
+    return &gCarveoutsSm7750;
   case 444:
   case 467:
     return &gCarveoutsSm6115;

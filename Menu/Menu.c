@@ -1134,7 +1134,7 @@ DeviceInfo (
   );
   Push (
     &List, gStrings->InfoBootloader,
-    SPrintAlloc ("OpenABL %s", M->AblVersion[0] ? M->AblVersion : MENU_VERSION)
+    SPrintAlloc ("OpenABL-PB %s", M->AblVersion[0] ? M->AblVersion : MENU_VERSION)
   );
   {
     OABL_STRING Text     = {0};

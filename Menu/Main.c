@@ -270,7 +270,7 @@ StandardBoot (
 
   MenuLog ("standard boot on %llu drive(s)", (UINT64)Count);
   // LoaderInfo names the ABL, since that is the loader the OS knows.
-  AsciiStrCopy (Info, sizeof (Info), "OpenABL ");
+  AsciiStrCopy (Info, sizeof (Info), "OpenABL-PB ");
   AsciiStrAppend (Info, sizeof (Info), Ctx->Version);
   BooterNew (&Booter, Info, ClockNowUs (), &Scope);
   if (!Booter.Plan.Count) {

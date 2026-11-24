@@ -21,7 +21,7 @@ VERSION=$(cat VERSION)
 IMAGE=ghcr.io/tianocore/containers/fedora-40-dev:latest
 # The ABL tree's path in the container; its build cache stores this path.
 WORKSPACE=/workspaces/LinuxLoader
-CHIPSETS="sdm845 sm4450 sm6115 sm6450 sm7675 sm8250 sm8550 sm8650 sm8750"
+CHIPSETS="sdm845 sm4450 sm6115 sm6450 sm7675 sm7750 sm8250 sm8550 sm8650 sm8750"
 
 usage() {
   echo "usage: ./build.sh <chipset...|all> [--debug] [--no-standard-boot] [--clean]" >&2
@@ -41,6 +41,10 @@ chipset() {
     sm6115) SIGN=-v6 PVMFW=false BUNDLED_USB=1 ABL_EXTRA=TARGET_SOC_SM6115=1 OWN=loader-quirks ;;
     sm6450) OWN=sdcc-sm6450 ;;
     sm7675) OWN=sdcc-sm7675 ;;
+    # SM7750 (Kera/Eliza: Retroid Pocket Duo). Its XBL is SM8750's boot line
+    # (BOOT.MXF.2.5.1) and its stock ABL the "sun" product, so it builds
+    # as SM8750 does, but its XBL has FontDxe (no sysfont).
+    sm7750) OWN=park-display ;;
     sm8550) ;;
     sm8650) OWN=park-display ;;
     sm8750) OWN=park-display OWN_FULL=sysfont ;;
@@ -93,7 +97,7 @@ COMMON=(
   "PREBUILT_HOST_TOOLS=BUILD_CC=clang BUILD_CXX=clang++ LDPATH=-fuse-ld=lld BUILD_AR=llvm-ar"
   QSPA_BOOTCONFIG_ENABLE=0 AB_RETRYCOUNT_DISABLE=0 VERIFIED_BOOT_ENABLED=1
   USER_BUILD_VARIANT=1 DISABLE_PARALLEL_DOWNLOAD_FLASH=0 TARGET_ARCHITECTURE=arm64
-  CLANG_PREFIX=aarch64-linux-gnu- BOARD_BOOTLOADER_PRODUCT_NAME=OpenABL
+  CLANG_PREFIX=aarch64-linux-gnu- BOARD_BOOTLOADER_PRODUCT_NAME=OpenABL-PB
   BOARD_BOOTLOADER_PRODUCT_VERSION="$VERSION" REMOVE_CARVEOUT_REGION=0 ABL_USB_HOST=1
   OPENABL_MENU=1
 )

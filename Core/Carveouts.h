@@ -40,6 +40,9 @@ extern CONST CARVEOUTS_TABLE gCarveoutsSm8250;
 extern CONST CARVEOUTS_TABLE gCarveoutsSm8550;
 extern CONST CARVEOUTS_TABLE gCarveoutsSm8650;
 extern CONST CARVEOUTS_TABLE gCarveoutsSm8750;
+// The Retroid Pocket Duo's (SM7750) mainline DTB plus the stock Android
+// DTB's chipinfo region; the other fixed no-map regions of the two agree.
+extern CONST CARVEOUTS_TABLE gCarveoutsSm7750;
 extern CONST CARVEOUTS_TABLE gCarveoutsSm6115;
 // From mainline sdm845.dtsi (Linux 7.2), as there is no SDM845 device tree. XBL
 // leaves these out of its memory map, so the bank reclaim alone would give
